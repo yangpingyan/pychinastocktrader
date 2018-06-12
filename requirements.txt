@@ -17,5 +17,6 @@ pyperclip
 rqopen-client
 easyutils
 tushare
+pyautogui
 
 
