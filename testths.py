@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author : yangpingyan
+import random
 
 from log import log
 import pywinauto
@@ -13,17 +14,23 @@ security = '002413'
 log.info("Mission start")
 
 user = use('ths')
-user.connect(r'C:\\同花顺软件\\同花顺\\xiadan.exe')
+user.connect(r'C:\同花顺软件\同花顺\xiadan.exe')
 df = ts.get_realtime_quotes(security)
 buy_price = float(df['ask'][0])
 sell_price = float(df['bid'][0])
-user.buy(security, price=buy_price, amount=100)
-# user.sell(stockID_g, price=sell_price, amount=100)
-user.cancel_all_entrusts()
+# user.buy(security, price=buy_price, amount=100)
+# user.sell(security, price=sell_price, amount=100)
+# user.cancel_all_entrusts()
 
 log.info("Mission Complete")
 
-
+for count in range(1,100):
+    df = ts.get_realtime_quotes(security)
+    buy_price = float(df['ask'][0])
+    sell_price = float(df['bid'][0])
+    amount = random.randint(1,7) * 100
+    user.buy(security, price=buy_price, amount=amount)
+    time.sleep(1)
 #
 # class CommonConfig:
 #     DEFAULT_EXE_PATH = r'C:\同花顺软件\同花顺\xiadan.exe'
@@ -61,12 +68,12 @@ log.info("Mission Complete")
 # time.sleep(0.05)
 # main.window(control_id=1006, class_name='Button').click()
 #
-# while main.wrapper_object() != app.top_window().wrapper_object():
+# if main.wrapper_object() != app.top_window().wrapper_object():
 #     time.sleep(0.2)
 #     title = app.top_window().window(control_id=1365).window_text()
 #
 #     app.top_window().type_keys('%Y')
 #     time.sleep(0.2)
-#     app.top_window()['确定'].click()
+#     app.top_window().close()
 
 
