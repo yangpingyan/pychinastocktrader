@@ -5,10 +5,21 @@
 from log import log
 import pywinauto
 import time
+from api import use
+import tushare as ts
 
-
+security = '002413'
 
 log.info("Mission start")
+
+user = use('ths')
+user.connect(r'C:\\同花顺软件\\同花顺\\xiadan.exe')
+df = ts.get_realtime_quotes(security)
+buy_price = float(df['ask'][0])
+sell_price = float(df['bid'][0])
+user.buy(security, price=buy_price, amount=100)
+# user.sell(stockID_g, price=sell_price, amount=100)
+user.cancel_all_entrusts()
 
 log.info("Mission Complete")
 
