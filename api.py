@@ -17,6 +17,9 @@ def use(broker, debug=True, **kwargs):
     if broker.lower() in ['ths', '同花顺'] :
         from clienttrader import ClientTrader
         return ClientTrader()
+    elif broker.lower() in ['gj_client', '国金客户端']:
+        from gj_clienttrader import GJClientTrader
+        return GJClientTrader()
 
     raise NotImplemented
 
