@@ -5,6 +5,10 @@
 import functools
 import re
 import time
+
+import json
+from abc import abstractmethod
+
 import exceptions
 import easyutils
 import pywinauto
@@ -76,6 +80,33 @@ class ClientTrader():
         self._app = None
         self._main = None
         self._config = clientconfig.create(self.broker_type)
+
+    def prepare(self,
+                config_path=None,
+                user=None,
+                password=None,
+                exe_path=None,
+                comm_password=None,
+                **kwargs):
+        """
+        登陆客户端
+        :param config_path: 登陆配置文件，跟参数登陆方式二选一
+        :param user: 账号
+        :param password: 明文密码
+        :param exe_path: 客户端路径类似 r'C:\\htzqzyb2\\xiadan.exe', 默认 r'C:\\htzqzyb2\\xiadan.exe'
+        :param comm_password: 通讯密码
+        :return:
+        """
+        if config_path is not None:
+            with open(config_path, encoding='utf-8') as f:
+                account = json.load(f)
+            user = account['user']
+            password = account['password']
+            comm_password = account.get('comm_password')
+            exe_path = account.get('exe_path')
+
+        self.login(user, password, exe_path or self._config.DEFAULT_EXE_PATH,
+                   comm_password, **kwargs)
 
     @property
     def broker_type(self):
@@ -185,3 +216,10 @@ class ClientTrader():
 
     def _refresh(self):
         self._switch_left_menus(['买入[F1]'], sleep=0.05)
+
+    @abstractmethod
+    def login(self, user, password, param, comm_password, param1):
+        pass
+
+    def _run_exe_path(self, exe_path):
+        return os.path.join(os.path.dirname(exe_path), 'xiadan.exe')
